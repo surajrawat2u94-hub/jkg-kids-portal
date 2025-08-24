@@ -87,9 +87,9 @@
     // assets/videos/numbers/1.mp4 ... 10.mp4
     // assets/videos/shapes/Circle.mp4, Star.mp4, ...
     const VIDEO_FILES = {
-      ABC:{A:'assets/videos/abc/A.mp4',B:'assets/videos/abc/B.mp4',C:'assets/videos/abc/C.mp4',D:'assets/videos/abc/D.mp4',E:'assets/videos/abc/E.mp4',F:'assets/videos/abc/F.mp4',G:'assets/videos/abc/G.mp4',H:'assets/videos/abc/H.mp4',I:'assets/videos/abc/I.mp4',J:'assets/videos/abc/J.mp4',K:'assets/videos/abc/K.mp4',L:'assets/videos/abc/L.mp4',M:'assets/videos/abc/M.mp4',N:'assets/videos/abc/N.mp4',O:'assets/videos/abc/O.mp4',P:'assets/videos/abc/P.mp4',Q:'assets/videos/abc/Q.mp4',R:'assets/videos/abc/R.mp4',S:'assets/videos/abc/S.mp4',T:'assets/videos/abc/T.mp4',U:'assets/videos/abc/U.mp4',V:'assets/videos/abc/V.mp4',W:'assets/videos/abc/W.mp4',X:'assets/videos/abc/X.mp4',Y:'assets/videos/abc/Y.mp4',Z:'assets/videos/abc/Z.mp4'},
-      NUM:{1:'assets/videos/numbers/1.mp4',2:'assets/videos/numbers/2.mp4',3:'assets/videos/numbers/3.mp4',4:'assets/videos/numbers/4.mp4',5:'assets/videos/numbers/5.mp4',6:'assets/videos/numbers/6.mp4',7:'assets/videos/numbers/7.mp4',8:'assets/videos/numbers/8.mp4',9:'assets/videos/numbers/9.mp4',10:'assets/videos/numbers/10.mp4'},
-      SHP:{Circle:'assets/videos/shapes/Circle.mp4',Square:'assets/videos/shapes/Square.mp4',Triangle:'assets/videos/shapes/Triangle.mp4',Heart:'assets/videos/shapes/Heart.mp4',Star:'assets/videos/shapes/Star.mp4',Diamond:'assets/videos/shapes/Diamond.mp4'}
+      ABC:{A:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',B:'assets/videos/abc/B.mp4',C:'assets/videos/abc/C.mp4',D:'assets/videos/abc/D.mp4',E:'assets/videos/abc/E.mp4',F:'assets/videos/abc/F.mp4',G:'assets/videos/abc/G.mp4',H:'assets/videos/abc/H.mp4',I:'assets/videos/abc/I.mp4',J:'assets/videos/abc/J.mp4',K:'assets/videos/abc/K.mp4',L:'assets/videos/abc/L.mp4',M:'assets/videos/abc/M.mp4',N:'assets/videos/abc/N.mp4',O:'assets/videos/abc/O.mp4',P:'assets/videos/abc/P.mp4',Q:'assets/videos/abc/Q.mp4',R:'assets/videos/abc/R.mp4',S:'assets/videos/abc/S.mp4',T:'assets/videos/abc/T.mp4',U:'assets/videos/abc/U.mp4',V:'assets/videos/abc/V.mp4',W:'assets/videos/abc/W.mp4',X:'assets/videos/abc/X.mp4',Y:'assets/videos/abc/Y.mp4',Z:'assets/videos/abc/Z.mp4',
+      NUM:{1:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',2:'assets/videos/numbers/2.mp4',3:'assets/videos/numbers/3.mp4',4:'assets/videos/numbers/4.mp4',5:'assets/videos/numbers/5.mp4',6:'assets/videos/numbers/6.mp4',7:'assets/videos/numbers/7.mp4',8:'assets/videos/numbers/8.mp4',9:'assets/videos/numbers/9.mp4',10:'assets/videos/numbers/10.mp4',
+      SHP:{Circle:'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',Square:'assets/videos/shapes/Square.mp4',Triangle:'assets/videos/shapes/Triangle.mp4',Heart:'assets/videos/shapes/Heart.mp4',Star:'assets/videos/shapes/Star.mp4',Diamond:'assets/videos/shapes/Diamond.mp4'
     };
 
     // Fallback visuals if a video file is missing
@@ -101,9 +101,9 @@
       const wrap=document.querySelector('#overlay .frameWrap');
       let player=document.getElementById('localPlayer');
       if(src){
-        if(!player){ wrap.innerHTML='<video id="localPlayer" playsinline controls preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;border-radius:12px;background:#000"></video>'; player=document.getElementById('localPlayer'); }
+        if(!player){ wrap.innerHTML='<video id="localPlayer" playsinline controls preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;border-radius:12px;background:#000" type="video/mp4"></video>'; player=document.getElementById('localPlayer'); }
         if(poster) player.setAttribute('poster', poster); else player.removeAttribute('poster');
-        player.src=src; player.currentTime=0; overlay.style.display='flex';
+        player.src=src; player.currentTime=0; player.muted=true; overlay.style.display='flex';
         const p=player.play(); if(p && p.catch){ p.catch(()=>{}); }
         return;
       }
