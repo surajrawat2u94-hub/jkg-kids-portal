@@ -4,222 +4,180 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>JKG Kids Learn</title>
-
-  <!-- Fonts -->
+  <meta name="color-scheme" content="light" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
-
   <style>
     :root{
-      --bg: #fff9f1;
-      --ink: #1f2937;
-      --card: #ffffff;
-      --brand: #7c3aed;
-      --accent: #10b981;
-      --shadow: 0 10px 24px rgba(31,41,55,.10);
-      --radius: 20px;
+      --bg:#fff8f0; --ink:#1f2937; --card:#ffffff; --brand:#ff6b6b; --accent:#5dd39e; --vio:#845ef7; --yel:#ffd166;
+      --shadow:0 14px 32px rgba(31,41,55,.15); --radius:22px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0; color:var(--ink);
-      font-family:"Baloo 2", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-      background:
-        radial-gradient(1200px 800px at 20% -10%, #ffe7f5 0%, rgba(255,231,245,0) 50%),
-        radial-gradient(1200px 800px at 120% 110%, #e8f5ff 0%, rgba(232,245,255,0) 45%),
-        var(--bg);
-    }
+    body{margin:0;font-family:"Baloo 2",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
 
-    header{
-      position:sticky; top:0; z-index:50; background:transparent;
-      padding:14px 18px;
-    }
-    .nav{
-      max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;
-      background:rgba(255,255,255,.8); backdrop-filter: blur(6px) saturate(140%);
-      border-radius:18px; box-shadow:var(--shadow); padding:10px 14px;
-    }
-    .brand{display:flex; align-items:center; gap:10px; cursor:pointer}
-    .logo{
-      width:44px; height:44px; border-radius:50%; display:grid; place-items:center;
-      background:conic-gradient(from 180deg at 50% 50%, #fda4af, #f9a8d4, #c4b5fd, #93c5fd, #a7f3d0, #fde68a, #fda4af);
-      animation: floaty 5s ease-in-out infinite;
-    }
-    .brand h1{margin:0; font-size:22px; font-weight:800}
+    /* --- Fun background --- */
+    .sky{position:fixed;inset:0;z-index:-1;overflow:hidden}
+    .sky:before,.sky:after{content:"";position:absolute;border-radius:50%}
+    .sky:before{width:1200px;height:1200px;background:radial-gradient(circle at 30% 20%,#ffe2f1 0%,transparent 60%);top:-30%;left:-10%;filter:blur(10px)}
+    .sky:after{width:1400px;height:1400px;background:radial-gradient(circle at 80% 90%,#e0f2ff 0%,transparent 55%);bottom:-40%;right:-20%;filter:blur(10px)}
+    .cloud{position:absolute;top:10%;left:-20%;width:200px;height:70px;background:#fff;border-radius:50px;box-shadow:var(--shadow);opacity:.8;animation:drift 40s linear infinite}
+    .cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+    .cloud:before{width:110px;height:110px;left:20px;top:-50px}
+    .cloud:after{width:130px;height:130px;left:90px;top:-70px}
+    .cloud.c2{top:25%;animation-duration:55s;transform:scale(.9)}
+    .cloud.c3{top:60%;animation-duration:48s;transform:scale(1.2)}
+    @keyframes drift{0%{left:-25%}100%{left:110%}}
 
-    .btn{
-      border:0; border-radius:14px; padding:10px 14px; font-weight:800; cursor:pointer;
-      background:var(--brand); color:#fff; box-shadow:var(--shadow);
-    }
+    header{position:sticky;top:0;z-index:50;padding:14px 18px}
+    .nav{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.85);backdrop-filter:blur(8px) saturate(140%);border-radius:18px;box-shadow:var(--shadow);padding:10px 14px}
+    .brand{display:flex;align-items:center;gap:12px;cursor:pointer}
+    .logo{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(from 180deg,#ffadad,#ffd6a5,#fdffb6,#caffbf,#9bf6ff,#bdb2ff,#ffc6ff);animation:floaty 5s ease-in-out infinite}
+    .brand h1{margin:0;font-size:24px;font-weight:800}
+    .btn{border:0;border-radius:16px;padding:10px 16px;font-weight:800;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--brand),#ff9472);box-shadow:var(--shadow)}
 
-    main{max-width:1100px; margin:10px auto 40px; padding:0 18px}
+    main{max-width:1100px;margin:12px auto 48px;padding:0 18px}
+    .grid{display:grid;gap:16px}
+    @media(min-width:680px){.grid.cols-3{grid-template-columns:repeat(3,1fr)}}
 
-    .grid{display:grid; gap:16px}
-    @media(min-width:680px){ .grid.cols-3{ grid-template-columns: repeat(3, 1fr) } }
+    .tile{position:relative;isolation:isolate;background:var(--card);border-radius:var(--radius);padding:26px;text-align:center;cursor:pointer;box-shadow:var(--shadow);transition:transform .18s ease;animation:popIn .45s both}
+    .tile:hover{transform:translateY(-6px) scale(1.02)}
+    .tile .emoji{font-size:54px;display:block;animation:pulse 1.6s infinite}
+    .tile .title{margin-top:8px;font-weight:800;font-size:22px}
+    .bubble{position:absolute;inset:auto -10px -10px auto;width:80px;height:80px;background:radial-gradient(circle at 30% 30%,#fff,rgba(255,255,255,.2));border-radius:50%;filter:blur(2px);opacity:.7}
 
-    .tile{
-      background:var(--card); border-radius:var(--radius); padding:26px; text-align:center; cursor:pointer;
-      box-shadow:var(--shadow); transition: transform .25s ease, box-shadow .25s ease;
-      animation: popIn .45s ease both;
-    }
-    .tile:hover{ transform: translateY(-6px) scale(1.03) }
-    .tile .emoji{ font-size:46px; display:block; animation: pulse 1.6s infinite }
-    .tile .title{ margin-top:10px; font-weight:800; font-size:20px }
+    .section{display:none}
+    .section.active{display:block}
 
-    .section{ display:none }
-    .section.active{ display:block }
+    .flashcard{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);margin:18px 0;padding:24px;display:grid;place-items:center;animation:flipIn .5s ease}
+    .chips{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 18px}
+    .chip{background:#fff;border:2px solid #e5e7eb;border-radius:999px;padding:10px 16px;cursor:pointer;box-shadow:var(--shadow);font-weight:800}
+    .chip:active{transform:scale(.98)}
 
-    .flashcard{
-      background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
-      margin:18px 0; padding:24px; display:grid; place-items:center; animation: flipIn .5s ease;
-    }
+    /* Video modal */
+    #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center}
+    .modal{position:relative;background:#000;border-radius:18px;width:min(96vw,980px);box-shadow:var(--shadow)}
+    .frameWrap{position:relative;padding-top:56.25%}
+    .modal iframe{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px}
+    .closeBtn{position:absolute;top:8px;right:8px;background:#fff;border:0;border-radius:10px;padding:6px 10px;cursor:pointer;font-weight:800}
 
-    .chips{ display:flex; flex-wrap:wrap; gap:10px; margin:8px 0 16px }
-    .chip{
-      background:#fff; border:2px solid #e5e7eb; border-radius:999px; padding:8px 14px;
-      cursor:pointer; box-shadow:var(--shadow); font-weight:800;
-    }
-    .chip:active{ transform: scale(.98) }
-
-    /* Modal for in-app video */
-    #overlay{ display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:999; align-items:center; justify-content:center; }
-    .modal{ position:relative; background:#000; border-radius:16px; width:min(96vw, 980px); box-shadow:var(--shadow) }
-    .frameWrap{ position:relative; padding-top: 56.25% }
-    .modal iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; border-radius:12px }
-    .closeBtn{ position:absolute; top:8px; right:8px; background:#fff; border:0; border-radius:10px; padding:6px 10px; cursor:pointer; font-weight:800 }
-
-    footer{ text-align:center; padding:28px; color:#6b7280; font-size:14px }
+    footer{text-align:center;padding:28px;color:#6b7280;font-size:14px}
 
     /* Animations */
-    @keyframes popIn{0%{transform:scale(.85);opacity:0}60%{transform:scale(1.04);opacity:1}100%{transform:scale(1)}}
+    @keyframes popIn{0%{transform:scale(.85);opacity:0}60%{transform:scale(1.05);opacity:1}100%{transform:scale(1)}}
     @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
     @keyframes floaty{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
     @keyframes flipIn{0%{transform:rotateY(90deg);opacity:0}100%{transform:rotateY(0);opacity:1}}
-    @media (prefers-reduced-motion: reduce){
-      *{ animation: none !important; transition: none !important }
-    }
+    @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
   </style>
-
   <script>
-    // Router helpers defined BEFORE any inline onclick use
+    /* ===== Router: define BEFORE onclicks ===== */
     window.go = function(hash){ location.hash = hash || '#/' }
     window.openSection = function(id){
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      const el = document.getElementById(id || 'home');
-      if(el){ el.classList.add('active'); location.hash = '#/' + (id || 'home'); }
+      document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+      const el = document.getElementById(id||'home');
+      if(el){ el.classList.add('active'); location.hash = '#/'+(id||'home'); }
     }
-    function initFromHash(){
-      const id = (location.hash.replace('#/','') || 'home');
-      if(document.getElementById(id)) openSection(id); else openSection('home');
-    }
+    function initFromHash(){ const id=(location.hash.replace('#/','')||'home'); if(document.getElementById(id)) openSection(id); }
     window.addEventListener('hashchange', initFromHash);
 
-    // In-app video (no leaving the site)
-    function ytUrlFromQuery(q){
-      return 'https://www.youtube-nocookie.com/embed'
-           + '?listType=search&list=' + encodeURIComponent(q)
-           + '&autoplay=1&mute=1&playsinline=1&modestbranding=1&rel=0';
+    /* ===== In‑app video (no navigate) ===== */
+    // Prefer direct video IDs for reliability; fall back to search list when ID missing.
+    const VIDEO_IDS = {
+      ABC:{A:'8ZjpI6fgYSY',B:'yoWQPxyr2LQ',C:'mIY7X1j8i2M'}, // sample safe educational IDs; replace if you have favorites
+      NUM:{1:'2Xc9gXyf2G4',2:'j2Q3bQvQ7hU'},
+      SHP:{Circle:'Z1x3C9v2kZ8',Star:'J5vX6y4J8NQ'}
+    };
+    function ytEmbedFromId(id){
+      return 'https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&mute=1&playsinline=1&modestbranding=1&rel=0';
     }
-    function openVideoFromQuery(query){
-      const overlay = document.getElementById('overlay');
-      const frame   = document.getElementById('ytFrame');
-      frame.setAttribute('allow','autoplay; encrypted-media; picture-in-picture');
+    function ytSearch(q){
+      return 'https://www.youtube-nocookie.com/embed?listType=search&list='+encodeURIComponent(q)+'&autoplay=1&mute=1&playsinline=1&modestbranding=1&rel=0';
+    }
+    function openVideoByIdOrQuery(id, query){
+      const src = id ? ytEmbedFromId(id) : ytSearch(query);
+      const overlay=document.getElementById('overlay');
+      const frame=document.getElementById('ytFrame');
+      frame.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
       frame.setAttribute('allowfullscreen','');
       frame.setAttribute('playsinline','');
-      frame.src = ytUrlFromQuery(query);
-      overlay.style.display = 'flex';
+      frame.src = src;
+      overlay.style.display='flex';
     }
-    function closeVideo(){
-      const overlay = document.getElementById('overlay');
-      const frame   = document.getElementById('ytFrame');
-      frame.src = 'about:blank';
-      overlay.style.display = 'none';
-    }
+    function closeVideo(){ const o=document.getElementById('overlay'); const f=document.getElementById('ytFrame'); f.src='about:blank'; o.style.display='none'; }
     function stop(e){ e.stopPropagation(); }
 
-    // Build full demo sets
+    /* ===== Build interactive content ===== */
     const ABC_LIST = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    const ABC_WORDS = {
-      A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G:'Grapes',H:'Hat',I:'Ice cream',J:'Juice',
-      K:'Kite',L:'Lion',M:'Moon',N:'Nest',O:'Orange',P:'Parrot',Q:'Queen',R:'Rainbow',S:'Sun',T:'Tree',
-      U:'Umbrella',V:'Violin',W:'Watch',X:'Xylophone',Y:'Yarn',Z:'Zebra'
-    };
+    const ABC_WORDS = {A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G:'Grapes',H:'Hat',I:'Ice cream',J:'Juice',K:'Kite',L:'Lion',M:'Moon',N:'Nest',O:'Orange',P:'Parrot',Q:'Queen',R:'Rainbow',S:'Sun',T:'Tree',U:'Umbrella',V:'Violin',W:'Watch',X:'Xylophone',Y:'Yarn',Z:'Zebra'};
 
     function buildABC(){
-      const wrap = document.getElementById('abcWrap');
-      wrap.innerHTML = '';
-      wrap.insertAdjacentHTML('beforeend',
-        `<div class="flashcard">
-           <div style="text-align:center">
-             <div style="font-size:84px">A</div>
-             <div style="font-size:24px;color:#6b7280">A is for Apple 🍎</div>
-           </div>
-         </div>`
-      );
-      const chips = document.createElement('div'); chips.className = 'chips';
-      ABC_LIST.forEach(ch => {
-        const b = document.createElement('button');
-        b.className = 'chip'; b.textContent = ch; b.title = `Play ${ch}`;
-        b.onclick = () => openVideoFromQuery(`${ABC_WORDS[ch]} for kids cartoon`);
-        chips.appendChild(b);
+      const wrap=document.getElementById('abcWrap'); wrap.innerHTML='';
+      wrap.insertAdjacentHTML('beforeend', `<div class="flashcard"><div style="text-align:center"><div style="font-size:92px">A</div><div style="font-size:24px;color:#6b7280">A is for Apple 🍎</div></div></div>`);
+      const chips=document.createElement('div'); chips.className='chips';
+      ABC_LIST.forEach(ch=>{
+        const btn=document.createElement('button'); btn.className='chip'; btn.textContent=ch; btn.title=`Play ${ch}`;
+        btn.onclick=()=>{
+          const id = (VIDEO_IDS.ABC||{})[ch];
+          const q = ABC_WORDS[ch]+' for kids cartoon';
+          openVideoByIdOrQuery(id,q);
+        };
+        chips.appendChild(btn);
       });
       wrap.appendChild(chips);
     }
 
     function buildNumbers(){
-      const wrap = document.getElementById('numWrap'); wrap.innerHTML = '';
-      wrap.insertAdjacentHTML('beforeend',
-        `<div class="flashcard">
-           <div style="text-align:center">
-             <div style="font-size:84px">1</div>
-             <div style="font-size:24px;color:#6b7280">⭐</div>
-           </div>
-         </div>`
-      );
-      const chips = document.createElement('div'); chips.className = 'chips';
+      const wrap=document.getElementById('numWrap'); wrap.innerHTML='';
+      wrap.insertAdjacentHTML('beforeend', `<div class="flashcard"><div style="text-align:center"><div style="font-size:92px">1</div><div style="font-size:24px;color:#6b7280">⭐</div></div></div>`);
+      const chips=document.createElement('div'); chips.className='chips';
       for(let i=1;i<=10;i++){
-        const b = document.createElement('button');
-        b.className = 'chip'; b.textContent = i; b.title = `Counting ${i}`;
-        b.onclick = () => openVideoFromQuery(`Counting ${i} for kids animation`);
-        chips.appendChild(b);
+        const btn=document.createElement('button'); btn.className='chip'; btn.textContent=i; btn.title=`Counting ${i}`;
+        btn.onclick=()=>{
+          const id=(VIDEO_IDS.NUM||{})[i];
+          const q=`Counting ${i} for kids animation`;
+          openVideoByIdOrQuery(id,q);
+        };
+        chips.appendChild(btn);
       }
       wrap.appendChild(chips);
     }
 
-    const SHAPES = ["Circle","Square","Triangle","Heart","Star","Diamond"];
+    const SHAPES=['Circle','Square','Triangle','Heart','Star','Diamond'];
     function buildShapes(){
-      const wrap = document.getElementById('shapeWrap'); wrap.innerHTML = '';
-      wrap.insertAdjacentHTML('beforeend',
-        `<div class="flashcard">
-           <div style="text-align:center">
-             <div style="font-size:84px">⚪</div>
-             <div style="font-size:24px;color:#6b7280">Circle</div>
-           </div>
-         </div>`
-      );
-      const chips = document.createElement('div'); chips.className = 'chips';
-      SHAPES.forEach(name => {
-        const b = document.createElement('button');
-        b.className = 'chip'; b.textContent = name; b.title = `${name} video`;
-        b.onclick = () => openVideoFromQuery(`${name} shape for kids animation`);
-        chips.appendChild(b);
+      const wrap=document.getElementById('shapeWrap'); wrap.innerHTML='';
+      wrap.insertAdjacentHTML('beforeend', `<div class="flashcard"><div style="text-align:center"><div style="font-size:92px">⚪</div><div style="font-size:24px;color:#6b7280">Circle</div></div></div>`);
+      const chips=document.createElement('div'); chips.className='chips';
+      SHAPES.forEach(name=>{
+        const btn=document.createElement('button'); btn.className='chip'; btn.textContent=name; btn.title=name+' video';
+        btn.onclick=()=>{
+          const id=(VIDEO_IDS.SHP||{})[name];
+          const q=`${name} shape for kids animation`;
+          openVideoByIdOrQuery(id,q);
+        };
+        chips.appendChild(btn);
       });
       wrap.appendChild(chips);
     }
 
-    // Bootstrap
-    document.addEventListener('DOMContentLoaded', () => {
-      initFromHash();
-      buildABC(); buildNumbers(); buildShapes();
+    /* ===== Boot ===== */
+    document.addEventListener('DOMContentLoaded',()=>{
+      initFromHash(); buildABC(); buildNumbers(); buildShapes();
     });
   </script>
 </head>
 <body>
+  <div class="sky" aria-hidden="true">
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+  </div>
+
   <header>
     <div class="nav">
       <div class="brand" onclick="go('/')">
-        <div class="logo" aria-hidden="true">🎈</div>
+        <div class="logo">🎈</div>
         <h1>JKG Kids Learn</h1>
       </div>
       <button class="btn" onclick="openSection('abcs')">Start ▶️</button>
@@ -231,16 +189,19 @@
     <section id="home" class="section active" aria-label="Home">
       <div class="grid cols-3" style="margin-top:14px">
         <div class="tile" onclick="openSection('abcs')" aria-label="ABCs">
-          <span class="emoji">🔤</span>
+          <span class="emoji">🔠</span>
           <span class="title">ABCs</span>
+          <div class="bubble"></div>
         </div>
         <div class="tile" onclick="openSection('numbers')" aria-label="Numbers 1-10">
           <span class="emoji">🔢</span>
           <span class="title">Numbers</span>
+          <div class="bubble" style="background:radial-gradient(circle at 30% 30%,#fff,rgba(255,255,255,.2));"></div>
         </div>
         <div class="tile" onclick="openSection('shapes')" aria-label="Shapes and Colors">
-          <span class="emoji">🟦</span>
-          <span class="title">Shapes & Colors</span>
+          <span class="emoji">🔷</span>
+          <span class="title">Shapes</span>
+          <div class="bubble" style="background:radial-gradient(circle at 30% 30%,#fff,rgba(255,255,255,.2));"></div>
         </div>
       </div>
     </section>
@@ -259,23 +220,23 @@
 
     <!-- Shapes -->
     <section id="shapes" class="section" aria-label="Shapes and Colors">
-      <h2 style="margin:10px 4px 0">Shapes & Colors</h2>
+      <h2 style="margin:10px 4px 0">Shapes</h2>
       <div id="shapeWrap"></div>
     </section>
   </main>
 
-  <!-- In-app video modal -->
+  <!-- In‑app video modal -->
   <div id="overlay" onclick="closeVideo()">
     <div class="modal" onclick="stop(event)">
       <button class="closeBtn" onclick="closeVideo()">✖</button>
       <div class="frameWrap">
-        <iframe id="ytFrame" title="Learning video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen playsinline></iframe>
+        <iframe id="ytFrame" title="Learning video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen playsinline></iframe>
       </div>
     </div>
   </div>
 
   <footer>
-    Made with ❤️ for little learners · v1.0
+    Made with ❤️ for little learners · v2.0
   </footer>
 </body>
 </html>
