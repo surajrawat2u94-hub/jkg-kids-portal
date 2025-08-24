@@ -9,10 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#fff8f0; --ink:#1f2937; --card:#ffffff; --brand:#ff6b6b; --accent:#5dd39e; --vio:#845ef7; --yel:#ffd166;
-      --shadow:0 14px 32px rgba(31,41,55,.15); --radius:22px;
-    }
+    :root{ --bg:#fff8f0; --ink:#1f2937; --card:#ffffff; --brand:#ff6b6b; --accent:#5dd39e; --vio:#845ef7; --yel:#ffd166; --shadow:0 14px 32px rgba(31,41,55,.15); --radius:22px }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{margin:0;font-family:"Baloo 2",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
@@ -55,11 +52,11 @@
     .chip{background:#fff;border:2px solid #e5e7eb;border-radius:999px;padding:10px 16px;cursor:pointer;box-shadow:var(--shadow);font-weight:800}
     .chip:active{transform:scale(.98)}
 
-    /* Video modal */
+    /* Video modal (LOCAL MP4, no YouTube) */
     #overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center}
     .modal{position:relative;background:#000;border-radius:18px;width:min(96vw,980px);box-shadow:var(--shadow)}
     .frameWrap{position:relative;padding-top:56.25%}
-    .modal iframe{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px}
+    .modal video{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:12px;background:#000}
     .closeBtn{position:absolute;top:8px;right:8px;background:#fff;border:0;border-radius:10px;padding:6px 10px;cursor:pointer;font-weight:800}
 
     footer{text-align:center;padding:28px;color:#6b7280;font-size:14px}
@@ -82,35 +79,37 @@
     function initFromHash(){ const id=(location.hash.replace('#/','')||'home'); if(document.getElementById(id)) openSection(id); }
     window.addEventListener('hashchange', initFromHash);
 
-    /* ===== In‑app video (no navigate) ===== */
-    // Prefer direct video IDs for reliability; fall back to search list when ID missing.
-    const VIDEO_IDS = {
-      ABC:{A:'8ZjpI6fgYSY',B:'yoWQPxyr2LQ',C:'mIY7X1j8i2M'}, // sample safe educational IDs; replace if you have favorites
-      NUM:{1:'2Xc9gXyf2G4',2:'j2Q3bQvQ7hU'},
-      SHP:{Circle:'Z1x3C9v2kZ8',Star:'J5vX6y4J8NQ'}
+    /* ===== Local video player (MP4), no YouTube ===== */
+    // Folder plan: place your MP4s in these paths in your repo:
+    // assets/videos/abc/A.mp4 ... Z.mp4
+    // assets/videos/numbers/1.mp4 ... 10.mp4
+    // assets/videos/shapes/Circle.mp4, Star.mp4, ...
+    const VIDEO_FILES = {
+      ABC:{A:'assets/videos/abc/A.mp4',B:'assets/videos/abc/B.mp4',C:'assets/videos/abc/C.mp4',D:'assets/videos/abc/D.mp4',E:'assets/videos/abc/E.mp4',F:'assets/videos/abc/F.mp4',G:'assets/videos/abc/G.mp4',H:'assets/videos/abc/H.mp4',I:'assets/videos/abc/I.mp4',J:'assets/videos/abc/J.mp4',K:'assets/videos/abc/K.mp4',L:'assets/videos/abc/L.mp4',M:'assets/videos/abc/M.mp4',N:'assets/videos/abc/N.mp4',O:'assets/videos/abc/O.mp4',P:'assets/videos/abc/P.mp4',Q:'assets/videos/abc/Q.mp4',R:'assets/videos/abc/R.mp4',S:'assets/videos/abc/S.mp4',T:'assets/videos/abc/T.mp4',U:'assets/videos/abc/U.mp4',V:'assets/videos/abc/V.mp4',W:'assets/videos/abc/W.mp4',X:'assets/videos/abc/X.mp4',Y:'assets/videos/abc/Y.mp4',Z:'assets/videos/abc/Z.mp4'},
+      NUM:{1:'assets/videos/numbers/1.mp4',2:'assets/videos/numbers/2.mp4',3:'assets/videos/numbers/3.mp4',4:'assets/videos/numbers/4.mp4',5:'assets/videos/numbers/5.mp4',6:'assets/videos/numbers/6.mp4',7:'assets/videos/numbers/7.mp4',8:'assets/videos/numbers/8.mp4',9:'assets/videos/numbers/9.mp4',10:'assets/videos/numbers/10.mp4'},
+      SHP:{Circle:'assets/videos/shapes/Circle.mp4',Square:'assets/videos/shapes/Square.mp4',Triangle:'assets/videos/shapes/Triangle.mp4',Heart:'assets/videos/shapes/Heart.mp4',Star:'assets/videos/shapes/Star.mp4',Diamond:'assets/videos/shapes/Diamond.mp4'}
     };
-    function ytEmbedFromId(id){
-      return 'https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&mute=1&playsinline=1&modestbranding=1&rel=0';
-    }
-    function ytSearch(q){
-      return 'https://www.youtube-nocookie.com/embed?listType=search&list='+encodeURIComponent(q)+'&autoplay=1&mute=1&playsinline=1&modestbranding=1&rel=0';
-    }
-    function openVideoByIdOrQuery(id, query){
-      const src = id ? ytEmbedFromId(id) : ytSearch(query);
+
+    function openLocalVideo(src, poster){
       const overlay=document.getElementById('overlay');
-      const frame=document.getElementById('ytFrame');
-      frame.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-      frame.setAttribute('allowfullscreen','');
-      frame.setAttribute('playsinline','');
-      frame.src = src;
+      let player=document.getElementById('localPlayer');
+      if(!player){
+        const wrap=document.querySelector('#overlay .frameWrap');
+        wrap.innerHTML='<video id="localPlayer" playsinline controls preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;border-radius:12px;background:#000"></video>';
+        player=document.getElementById('localPlayer');
+      }
+      if(!src){ alert('Video not found. Please add the MP4 file to your repo under assets/videos.'); return; }
+      if(poster) player.setAttribute('poster', poster); else player.removeAttribute('poster');
+      player.src=src; player.currentTime=0;
       overlay.style.display='flex';
+      const p=player.play(); if(p && p.catch){ p.catch(()=>{/* user can press play */}); }
     }
-    function closeVideo(){ const o=document.getElementById('overlay'); const f=document.getElementById('ytFrame'); f.src='about:blank'; o.style.display='none'; }
+    function closeVideo(){ const o=document.getElementById('overlay'); const v=document.getElementById('localPlayer'); if(v){ v.pause(); v.removeAttribute('src'); v.load(); } o.style.display='none'; }
     function stop(e){ e.stopPropagation(); }
 
     /* ===== Build interactive content ===== */
-    const ABC_LIST = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    const ABC_WORDS = {A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G:'Grapes',H:'Hat',I:'Ice cream',J:'Juice',K:'Kite',L:'Lion',M:'Moon',N:'Nest',O:'Orange',P:'Parrot',Q:'Queen',R:'Rainbow',S:'Sun',T:'Tree',U:'Umbrella',V:'Violin',W:'Watch',X:'Xylophone',Y:'Yarn',Z:'Zebra'};
+    const ABC_LIST='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const ABC_WORDS={A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G:'Grapes',H:'Hat',I:'Ice cream',J:'Juice',K:'Kite',L:'Lion',M:'Moon',N:'Nest',O:'Orange',P:'Parrot',Q:'Queen',R:'Rainbow',S:'Sun',T:'Tree',U:'Umbrella',V:'Violin',W:'Watch',X:'Xylophone',Y:'Yarn',Z:'Zebra'};
 
     function buildABC(){
       const wrap=document.getElementById('abcWrap'); wrap.innerHTML='';
@@ -118,11 +117,7 @@
       const chips=document.createElement('div'); chips.className='chips';
       ABC_LIST.forEach(ch=>{
         const btn=document.createElement('button'); btn.className='chip'; btn.textContent=ch; btn.title=`Play ${ch}`;
-        btn.onclick=()=>{
-          const id = (VIDEO_IDS.ABC||{})[ch];
-          const q = ABC_WORDS[ch]+' for kids cartoon';
-          openVideoByIdOrQuery(id,q);
-        };
+        btn.onclick=()=> openLocalVideo((VIDEO_FILES.ABC||{})[ch], `assets/posters/abc/${ch}.jpg`);
         chips.appendChild(btn);
       });
       wrap.appendChild(chips);
@@ -134,11 +129,7 @@
       const chips=document.createElement('div'); chips.className='chips';
       for(let i=1;i<=10;i++){
         const btn=document.createElement('button'); btn.className='chip'; btn.textContent=i; btn.title=`Counting ${i}`;
-        btn.onclick=()=>{
-          const id=(VIDEO_IDS.NUM||{})[i];
-          const q=`Counting ${i} for kids animation`;
-          openVideoByIdOrQuery(id,q);
-        };
+        btn.onclick=()=> openLocalVideo((VIDEO_FILES.NUM||{})[i], `assets/posters/numbers/${i}.jpg`);
         chips.appendChild(btn);
       }
       wrap.appendChild(chips);
@@ -151,20 +142,14 @@
       const chips=document.createElement('div'); chips.className='chips';
       SHAPES.forEach(name=>{
         const btn=document.createElement('button'); btn.className='chip'; btn.textContent=name; btn.title=name+' video';
-        btn.onclick=()=>{
-          const id=(VIDEO_IDS.SHP||{})[name];
-          const q=`${name} shape for kids animation`;
-          openVideoByIdOrQuery(id,q);
-        };
+        btn.onclick=()=> openLocalVideo((VIDEO_FILES.SHP||{})[name], `assets/posters/shapes/${name}.jpg`);
         chips.appendChild(btn);
       });
       wrap.appendChild(chips);
     }
 
     /* ===== Boot ===== */
-    document.addEventListener('DOMContentLoaded',()=>{
-      initFromHash(); buildABC(); buildNumbers(); buildShapes();
-    });
+    document.addEventListener('DOMContentLoaded',()=>{ initFromHash(); buildABC(); buildNumbers(); buildShapes(); });
   </script>
 </head>
 <body>
@@ -225,18 +210,16 @@
     </section>
   </main>
 
-  <!-- In‑app video modal -->
+  <!-- In‑app video modal (LOCAL MP4 injected) -->
   <div id="overlay" onclick="closeVideo()">
     <div class="modal" onclick="stop(event)">
       <button class="closeBtn" onclick="closeVideo()">✖</button>
-      <div class="frameWrap">
-        <iframe id="ytFrame" title="Learning video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen playsinline></iframe>
-      </div>
+      <div class="frameWrap"><!-- <video id="localPlayer"> injected by JS --></div>
     </div>
   </div>
 
   <footer>
-    Made with ❤️ for little learners · v2.0
+    Made with ❤️ for little learners · v2.1 (local videos)
   </footer>
 </body>
 </html>
