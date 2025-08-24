@@ -108,7 +108,8 @@
     function stop(e){ e.stopPropagation(); }
 
     /* ===== Build interactive content ===== */
-    const ABC_LIST='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const ABC_UP='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const ABC_LOW='abcdefghijklmnopqrstuvwxyz'.split('');
     const ABC_WORDS={A:'Apple',B:'Ball',C:'Cat',D:'Dog',E:'Elephant',F:'Fish',G:'Grapes',H:'Hat',I:'Ice cream',J:'Juice',K:'Kite',L:'Lion',M:'Moon',N:'Nest',O:'Orange',P:'Parrot',Q:'Queen',R:'Rainbow',S:'Sun',T:'Tree',U:'Umbrella',V:'Violin',W:'Watch',X:'Xylophone',Y:'Yarn',Z:'Zebra'};
 
     function buildABC(){
@@ -148,8 +149,26 @@
       wrap.appendChild(chips);
     }
 
+    /* ===== Build ABC (uppercase + lowercase, case-insensitive mapping) ===== */
+    function buildABC_v2(){
+      const wrap=document.getElementById('abcWrap'); if(!wrap) return; wrap.innerHTML='';
+      // Flashcard that updates to the chosen letter
+      const card=document.createElement('div'); card.className='flashcard';
+      card.innerHTML=`<div style="text-align:center"><div id="abcBig" style="font-size:92px">A</div><div id="abcWord" style="font-size:24px;color:#6b7280">A is for Apple 🍎</div></div>`;
+      wrap.appendChild(card);
+      function showABC(letter){ const up=(letter||'A').toUpperCase(); const name=ABC_WORDS[up]||''; document.getElementById('abcBig').textContent=up; document.getElementById('abcWord').textContent=up+" is for "+name; }
+      // Row 1: Uppercase chips
+      const row1=document.createElement('div'); row1.className='chips';
+      ABC_UP.forEach(ch=>{ const b=document.createElement('button'); b.className='chip'; b.textContent=ch; b.title=`Play ${ch}`; b.onclick=()=>{ showABC(ch); const src=(VIDEO_FILES.ABC||{})[ch]; if(!src){ alert(`Add assets/videos/abc/${ch}.mp4`); return; } openLocalVideo(src, `assets/posters/abc/${ch}.jpg`); }; row1.appendChild(b); });
+      wrap.appendChild(row1);
+      // Row 2: Lowercase chips -> map to uppercase files
+      const row2=document.createElement('div'); row2.className='chips';
+      ABC_LOW.forEach(ch=>{ const b=document.createElement('button'); b.className='chip'; b.textContent=ch; b.title=`Play ${ch}`; b.onclick=()=>{ const up=ch.toUpperCase(); showABC(up); const src=(VIDEO_FILES.ABC||{})[up]; if(!src){ alert(`Add assets/videos/abc/${up}.mp4`); return; } openLocalVideo(src, `assets/posters/abc/${up}.jpg`); }; row2.appendChild(b); });
+      wrap.appendChild(row2);
+    }
+
     /* ===== Boot ===== */
-    document.addEventListener('DOMContentLoaded',()=>{ initFromHash(); buildABC(); buildNumbers(); buildShapes(); });
+    document.addEventListener('DOMContentLoaded',()=>{ initFromHash(); buildABC_v2(); buildNumbers(); buildShapes(); });
   </script>
 </head>
 <body>
